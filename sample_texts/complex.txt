@@ -1,0 +1,3 @@
+The implementation of computational methodologies was carried out in various interdisciplinary environments where the optimization of algorithmic efficiency was considered to be critically important for performance enhancement and system scalability, making the interpretation of such systems increasingly difficult. 
+
+Furthermore, multiple processes were being executed and were evaluated repeatedly, resulting in increased complexity and reduced clarity in understanding.
