@@ -75,43 +75,68 @@ def passive_voice_score(text):
     sentences = split_sentences(text)
 
     if not sentences:
-        return 0, "No sentences detected"
+        return 0, "No sentences detected", []
 
-    passive_patterns = re.findall(
-        r'\b(is|was|were|are|been|being)\b\s+\w+(ed|en)\b', text
-    )
+    # Common stative adjectives to exclude (as per requirement)
+    exclusion_list = {
+    "tired", "interested", "worried", "bored", "confused",
+    "excited", "pleased", "surprised", "limited", "related",
+    "broken", "open", "closed", "ready", "available",
+    "possible", "different", "important", "necessary", "clear"
+}
 
-    percent = (len(passive_patterns) / len(sentences)) * 100
+    passive_count = int(0)
+    flagged_sentences = []
+
+    # Pattern: be-verb + word ending in ed/en
+    pattern = r'\b(am|is|are|was|were|be|been|being)\b\s+(\w+(ed|en))\b'
+
+    for sentence in sentences:
+        matches = re.findall(pattern, sentence)
+
+        for match in matches:
+            word = match[1].lower()  # extracted past participle
+
+            # Skip if it's a stative adjective
+            if word in exclusion_list:
+                continue
+
+            # Valid passive detected
+            passive_count += 1  # type: ignore
+            flagged_sentences.append(sentence)
+            break  # Avoid duplicate counting per sentence
+
+    percent = (passive_count / len(sentences)) * 100  # type: ignore
 
     if percent < 10:
-        return 95, "Mostly active voice"
+        return 95, "Mostly active voice", flagged_sentences
     elif percent < 25:
-        return 70, "Some passive voice"
+        return 70, "Some passive voice", flagged_sentences
     elif percent < 40:
-        return 50, "Frequent passive voice"
+        return 50, "Frequent passive voice", flagged_sentences
     else:
-        return 25, "Too much passive voice"
+        return 25, "Too much passive voice", flagged_sentences
 
 # -----------------------------
 # SYLLABLE COUNT
 # -----------------------------
 
-def count_syllables(word):
+def count_syllables(word: str) -> int:
     word = word.lower()
     vowels = "aeiouy"
-    count = 0
-    prev = False
+    count = int(0)
+    prev: bool = False
 
     for char in word:
         if char in vowels:
             if not prev:
-                count += 1
+                count += 1  # type: ignore
             prev = True
         else:
             prev = False
 
     if word.endswith("e"):
-        count = max(1, count - 1)
+        count = max(1, count - 1)  # type: ignore
 
     return count if count > 0 else 1
 
@@ -167,7 +192,7 @@ def analyze_text(text):
     s1, m1 = sentence_length_score(text)
     s2, m2 = word_complexity_score(text)
     s3, m3 = paragraph_density_score(text)
-    s4, m4 = passive_voice_score(text)
+    s4, m4, passive_sentences = passive_voice_score(text)
 
     flesch_score, flesch_level = flesch_reading_ease(text)
 
@@ -201,4 +226,4 @@ def analyze_text(text):
         "Passive Voice": s4
     })
 
-    return grade, round(overall_score, 2), results, suggestions
+    return grade, round(overall_score, 2), results, suggestions, passive_sentences

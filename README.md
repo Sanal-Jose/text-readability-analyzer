@@ -36,6 +36,14 @@ The system uses a **rule-based scoring approach** combined with standard readabi
 * **Word Complexity** → Percentage of long words (>7 characters)
 * **Paragraph Density** → Words per paragraph
 * **Passive Voice Detection** → Regex-based pattern matching
+---
+## 🔍 Recent Improvement
+
+- Enhanced passive voice detection to reduce false positives by excluding common stative adjectives
+- Added sentence-level feedback by highlighting specific passive sentences in the UI
+
+---
+
 * **Flesch Reading Ease** → Standard readability formula
 
 A **weighted scoring model** is applied to compute the final readability score.
@@ -115,6 +123,11 @@ Furthermore, multiple processes were being executed and were evaluated repeatedl
 ### 🔴 Complex Text Output
 ![Complex Output](assets/complex.png)
 
+### 🔍 Passive Voice Detection with Sentence-Level Feedback
+![Passive Voice Output](assets/passive.png)
+
+The system detects passive voice constructions using a refined rule-based approach that reduces false positives by filtering common stative expressions. It also provides sentence-level feedback by listing flagged sentences, allowing users to easily identify and improve problematic parts of their text.
+
 ---
 
 ## 🎯 Results
@@ -123,6 +136,7 @@ Furthermore, multiple processes were being executed and were evaluated repeatedl
 * Displays **detailed metric breakdown**
 * Highlights areas needing improvement
 * Offers **actionable suggestions**
+* Identifies **passive voice usage with sentence-level insights**
 
 ---
 

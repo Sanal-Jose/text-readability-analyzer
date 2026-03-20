@@ -23,7 +23,6 @@ with col1:
     st.title("📘 Text Readability Scorer")
     st.markdown("### ✨ Analyze your text readability instantly")
 
-    # Initialize session state
     if "text" not in st.session_state:
         st.session_state.text = ""
 
@@ -32,14 +31,12 @@ with col1:
     if uploaded_file:
         st.session_state.text = uploaded_file.read().decode("utf-8")
 
-    # Single text area (shared)
     text = st.text_area(
         "Paste your text here",
         value=st.session_state.text,
         height=200
     )
 
-    # Keep session updated when typing
     st.session_state.text = text
 
     analyze_button = st.button("Analyze", key="analyze_btn")
@@ -49,7 +46,7 @@ with col2:
         if text.strip() == "":
             st.warning("Please enter some text.")
         else:
-            grade, score, results, suggestions = analyze_text(text)
+            grade, score, results, suggestions, passive_sentences = analyze_text(text)
 
             # -----------------------------
             # RESULTS + STATS
@@ -105,6 +102,13 @@ with col2:
                             """,
                             unsafe_allow_html=True
                         )
+
+                        # ✅ CORRECT placement of expander
+                        if key == "Passive Voice" and passive_sentences:
+                            with st.expander("Show passive sentences"):
+                                for s in passive_sentences:
+                                    st.markdown(f"- {s}")
+
                     else:
                         st.write(f"**{key}**: {val} → {msg}")
 
